@@ -1,3 +1,4 @@
+import com.github.artfable.gradle.js.importfix.GradleJsImportFixExtension
 import com.github.artfable.gradle.npm.repository.GradleNpmRepositoryExtension
 
 group = "org.artfable"
@@ -6,6 +7,7 @@ version = "1.0-SNAPSHOT"
 buildscript {
 
     val npm_version = "0.0.3"
+    val jsImport_version = "0.0.1"
 
     repositories {
         mavenLocal()
@@ -15,11 +17,13 @@ buildscript {
 
     dependencies {
         classpath("com.github.artfable.gradle:gradle-npm-repository-plugin:$npm_version")
+        classpath("com.github.artfable.gradle:gradle-js-import-fix-plugin:$jsImport_version")
     }
 }
 
 apply(plugin = "base")
 apply(plugin = "artfable.npm")
+apply(plugin = "artfable.js.import.fix")
 
 configure<GradleNpmRepositoryExtension> {
     output = "$projectDir/src/libs/"
@@ -33,4 +37,12 @@ configure<GradleNpmRepositoryExtension> {
     )
 }
 
-tasks["npmLoad"].group = "frontend"
+configure<GradleJsImportFixExtension> {
+    directory = "$projectDir/src/libs"
+}
+
+tasks["jsImportFix"].mustRunAfter("npmLoad")
+
+listOf(tasks["npmLoad"], tasks["jsImportFix"]).forEach { task ->
+    task.group = "frontend"
+}
