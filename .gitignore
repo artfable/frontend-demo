@@ -1,0 +1,10 @@
+
+.gradle
+build/
+.DS_Store
+.idea
+*.iml
+out
+gen
+
+src/libs
