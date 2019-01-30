@@ -1,5 +1,8 @@
+import com.github.artfable.gradle.GradleLibsassPluginExtension
+import com.github.artfable.gradle.GradleLibsassPluginGroup
 import com.github.artfable.gradle.js.importfix.GradleJsImportFixExtension
 import com.github.artfable.gradle.npm.repository.GradleNpmRepositoryExtension
+import groovy.lang.Closure
 
 group = "org.artfable"
 version = "1.0-SNAPSHOT"
@@ -8,6 +11,7 @@ buildscript {
 
     val npm_version = "0.0.3"
     val jsImport_version = "0.0.1"
+    val sass_version = "0.0.1"
 
     repositories {
         mavenLocal()
@@ -18,12 +22,14 @@ buildscript {
     dependencies {
         classpath("com.github.artfable.gradle:gradle-npm-repository-plugin:$npm_version")
         classpath("com.github.artfable.gradle:gradle-js-import-fix-plugin:$jsImport_version")
+        classpath("com.github.artfable.gradle:gradle-sass-plugin:$sass_version")
     }
 }
 
 apply(plugin = "base")
 apply(plugin = "artfable.npm")
 apply(plugin = "artfable.js.import.fix")
+apply(plugin = "artfable.sass")
 
 configure<GradleNpmRepositoryExtension> {
     output = "$projectDir/src/libs/"
@@ -33,7 +39,8 @@ configure<GradleNpmRepositoryExtension> {
             Pair("@polymer/paper-toolbar", "3.0.1"),
             Pair("@polymer/paper-icon-button", "3.0.1"),
             Pair("@polymer/iron-icons", "3.0.1"),
-            Pair("@webcomponents/webcomponentsjs", "2.1.3")
+            Pair("@webcomponents/webcomponentsjs", "2.1.3"),
+            Pair("bootstrap", "4.1.3")
     )
 }
 
@@ -41,8 +48,17 @@ configure<GradleJsImportFixExtension> {
     directory = "$projectDir/src/libs"
 }
 
+configure<GradleLibsassPluginExtension> {
+    group(delegateClosureOf<GradleLibsassPluginGroup> {
+        sourceDir = "src/sass"
+        outputDir = "src/css"
+    } as Closure<Any>)
+}
+
+tasks.create("processResources") // to make sass plugin works. Will fix it later
+
 tasks["jsImportFix"].mustRunAfter("npmLoad")
 
-listOf(tasks["npmLoad"], tasks["jsImportFix"]).forEach { task ->
+listOf(tasks["npmLoad"], tasks["jsImportFix"], tasks["compileSass"]).forEach { task ->
     task.group = "frontend"
 }

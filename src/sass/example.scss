@@ -1,0 +1,12 @@
+@import "../libs/bootstrap/scss/bootstrap";
+
+@for $i from 1 through 9 {
+    .gray-#{$i * 100} {
+        background-color: map_get($grays, #{$i * 100});
+    }
+}
+
+.square {
+    width: 100px;
+    height: 100px;
+}
