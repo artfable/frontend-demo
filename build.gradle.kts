@@ -44,21 +44,40 @@ configure<GradleNpmRepositoryExtension> {
     )
 }
 
+tasks.create<Copy>("copyResources") {
+    mustRunAfter("npmLoad")
+
+    from("src") {
+        exclude(
+                "sass",
+                "libs/bootstrap",
+                "libs/**/test",
+                "**/demo",
+                "**/*.ts"
+        )
+    }
+
+    into("$buildDir/dist")
+}
+
 configure<GradleJsImportFixExtension> {
-    directory = "$projectDir/src/libs"
+    directory = "$buildDir/dist/libs"
 }
 
 configure<GradleLibsassPluginExtension> {
     group(delegateClosureOf<GradleLibsassPluginGroup> {
         sourceDir = "src/sass"
-        outputDir = "src/css"
+        outputDir = "$buildDir/dist/css"
     } as Closure<Any>)
 }
 
 tasks.create("processResources") // to make sass plugin works. Will fix it later
 
-tasks["jsImportFix"].mustRunAfter("npmLoad")
+tasks["jsImportFix"].mustRunAfter("npmLoad", "copyResources")
+tasks["compileSass"].mustRunAfter("npmLoad", "copyResources")
 
 listOf(tasks["npmLoad"], tasks["jsImportFix"], tasks["compileSass"]).forEach { task ->
     task.group = "frontend"
 }
+
+tasks["build"].dependsOn("compileSass", "jsImportFix", "npmLoad", "copyResources")
