@@ -32,7 +32,11 @@ apply(plugin = "artfable.js.import.fix")
 apply(plugin = "artfable.sass")
 
 configure<GradleNpmRepositoryExtension> {
-    output = "$projectDir/src/libs/"
+    val libDir = "$projectDir/src/libs/"
+    output = libDir
+    if(!file(libDir).exists()) {
+        file(libDir).mkdir()
+    }
     dependencies = mapOf(
             Pair("@polymer/polymer", "3.0.5"),
             Pair("@polymer/app-layout", "3.0.1"),
