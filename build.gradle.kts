@@ -9,7 +9,7 @@ version = "1.0-SNAPSHOT"
 
 buildscript {
 
-    val npm_version = "0.0.3"
+    val npm_version = "0.0.4"
     val jsImport_version = "0.0.1"
     val sass_version = "0.0.1"
 
@@ -66,7 +66,7 @@ configure<GradleJsImportFixExtension> {
 
 configure<GradleLibsassPluginExtension> {
     group(delegateClosureOf<GradleLibsassPluginGroup> {
-        sourceDir = "src/sass"
+        sourceDir = "$projectDir/src/sass"
         outputDir = "$buildDir/dist/css"
     } as Closure<Any>)
 }
