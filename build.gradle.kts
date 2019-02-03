@@ -90,7 +90,6 @@ tasks.create("runLocalServer") {
   dependsOn("build")
   doLast {
     val port = 8088
-//    SimpleHttpFileServerFactory().start(file("src"), port)
     SimpleHttpFileServerFactory().start(file("src"), port)
     println("server start at http://localhost:$port/index.html")
     Thread.sleep(Long.MAX_VALUE)
