@@ -4,11 +4,6 @@ import com.github.artfable.gradle.js.importfix.GradleJsImportFixExtension
 import com.github.artfable.gradle.npm.repository.GradleNpmRepositoryExtension
 import groovy.lang.Closure
 
-//plugins {
-//  war
-//  id("org.gretty") version "2.2.0"
-//}
-
 group = "org.artfable"
 version = "1.0-SNAPSHOT"
 
