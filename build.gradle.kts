@@ -4,6 +4,11 @@ import com.github.artfable.gradle.js.importfix.GradleJsImportFixExtension
 import com.github.artfable.gradle.npm.repository.GradleNpmRepositoryExtension
 import groovy.lang.Closure
 
+//plugins {
+//  war
+//  id("org.gretty") version "2.2.0"
+//}
+
 group = "org.artfable"
 version = "1.0-SNAPSHOT"
 
@@ -85,3 +90,14 @@ listOf(tasks["npmLoad"], tasks["jsImportFix"], tasks["compileSass"]).forEach { t
 }
 
 tasks["build"].dependsOn("compileSass", "jsImportFix", "npmLoad", "copyResources")
+
+tasks.create("runLocalServer") {
+  dependsOn("build")
+  doLast {
+    val port = 8088
+//    SimpleHttpFileServerFactory().start(file("src"), port)
+    SimpleHttpFileServerFactory().start(file("src"), port)
+    println("server start at http://localhost:$port/index.html")
+    Thread.sleep(Long.MAX_VALUE)
+  }
+}
