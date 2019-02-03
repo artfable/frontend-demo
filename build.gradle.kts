@@ -95,3 +95,7 @@ tasks.create("runLocalServer") {
     Thread.sleep(Long.MAX_VALUE)
   }
 }
+
+tasks.create("run") {
+  dependsOn("runLocalServer")
+}
